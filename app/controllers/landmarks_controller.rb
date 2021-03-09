@@ -1,40 +1,40 @@
 class LandmarksController < ApplicationController
-  # add controller methods
-  
-  #index
+
   get '/landmarks' do
-    @landmarks = Landmark.all 
-    erb :'landmark/index'
+    @landmarks = Landmark.all
+    erb :'/landmarks/index'
   end
 
-  #new  
   get '/landmarks/new' do
-    erb 'landmarks/new'
+    erb :'/landmarks/new'
   end
-  
-  post '/landmarks/new' do
-    @landmarks = Landmark.new(params[:name], params[year])
-    @landmark.save
-end
 
-  #show 
-  get '/landmarks/:id'
-  @landmark = Landmark.find_by_id(params[:id])
-  erb :'landmarks/show'
-  
-  #edit 
+  get '/landmarks/:id' do
+    @landmark = Landmark.find(params["id"].to_i)
+    erb :'/landmarks/show'
+  end
+
   get '/landmarks/:id/edit' do
-    @landmark = Landmark.find_by_id(params[:id])
-    erb :'landmarks/edit'
+    @landmark = Landmark.find(params["id"].to_i)
+    erb :'/landmarks/edit'
   end
+
+
+  post '/landmarks' do
+    landmark = Landmark.new(name: params["landmark_name"])
+    landmark.update(year_completed: params["landmark"]["year_completed"])
+    landmark.save
+    redirect to "/landmarks/#{landmark.id}"
+  end
+
   
-  post '/landmarks/id/edit' do
-    @landmark = Landmark.find_by_id(params[:id])
-    @landmark = Landmark.name(params[:name])
-    @landmark = Landmark.year_completed(params[:year_completed])
-    @landmark = Landmark.save
-    redirect '/landmarks/#{params[:id]}'
+  post '/landmarks/:id' do
+    landmark = Landmark.find(params[:id])
+    landmark.update(name: params["name"])
+    landmark.update(year_completed: params["year_completed"])
+    landmark.save
+
+    redirect to "/landmarks/#{landmark.id}"
   end
 
 end
-
